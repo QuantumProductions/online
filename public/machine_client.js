@@ -11,8 +11,12 @@ class OnlineClient {
 	}
 
 	configureSocket(socket) {
-		 socket.on('player-positions', function(data) {
-     	this.game.things['players'] = data;
+		var client = this;
+		 socket.on('game.things', function(data) {
+		 	client.game.things = data;
+	     //client.game.things['players'] = data;
+	     // console.log("player positions data" + data);
+	     console.log(window.client.game.things['players']);
     });
 
 		this.socket = socket;

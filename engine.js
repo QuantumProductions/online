@@ -4,8 +4,8 @@ var machine = require('./public/machine.js');
 
 class Player {
 	constructor(options) {
-		this.x = 10;
-		this.y = 10;
+		this.x = Math.floor(Math.random() * 100);
+		this.y = Math.floor(Math.random() * 100);
 	}
 }
 
