@@ -1,5 +1,5 @@
 "use strict";
 
-class OnlineGame extends Game {
+class OnlinePillarGame extends Game {
 
 }

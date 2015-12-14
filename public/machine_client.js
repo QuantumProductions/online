@@ -149,6 +149,7 @@ class OnlineClient {
 
 	onKeyDown(event) {
 		//event.preventDefault();
+		console.log("keydown");
 		this.key_pressed_map[this.key_map[event.keyCode]] = true;
 	}
 

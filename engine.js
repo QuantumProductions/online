@@ -2,7 +2,20 @@
 
 var machine = require('./public/machine.js');
 
-class OnlineGame extends machine.Game {
+class Player {
+	constructor(options) {
+		this.x = 10;
+		this.y = 10;
+	}
+}
+
+
+class ServerGame extends machine.Game {
+	constructor(options) {
+		super(options);
+		this.sockets = options['sockets'];
+	}
+
 	setupOutput(options) {
 	}
 
@@ -15,6 +28,11 @@ class OnlineGame extends machine.Game {
 		var updates = super.groupLoop(group_name);
 		//async emit update
 	}
+
+	connectPlayer(socket) {
+		var player = new Player();
+		this.add('players', player);
+	}
 }
 
-module.exports = {'OnlineGame' : OnlineGame};
+module.exports = {'ServerGame' : ServerGame};

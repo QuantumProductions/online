@@ -4,10 +4,10 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var logic = require('./logic');
-var engine = require('./engine');
+var hostedGame = require('./host');
 
-var game = new engine.OnlineGame();
-game.add('p1', {'foo' : 3});
+var game = new hostedGame.HostedGame({'sockets' : io.sockets});
+//game.add('p1', {'foo' : 3});
 console.log(game.things);
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,15 +15,17 @@ server.listen(3000, function() {
   console.log('listening');
 });
 
-var sid = 0;
 
 io.on('connection', function(socket) {
   console.log('connected'); //extrac
-  sid = socket.id;
 
-  logic.connectPlayer(socket);
+  game.connectPlayer(socket);
+
+  console.log("game.things['players']" + game.things['players']);;
+  socket.emit("game.things", game.things);
 
   socket.on('input', function(data) {
+    //update input for player
     logic.input(socket, data);
   });
 });
