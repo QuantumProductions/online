@@ -1,7 +1,16 @@
+"use strict";
+
 var players = {};
 
+class Player {
+	constructor(options) {
+		this.x = 10;
+		this.y = 10;
+	}
+}
+
 var connectPlayer = function(socket) {
-	players[socket.id] = {'x' : 10, 'y' : 10};
+	players[socket.id] = new Player();
 	return players[socket.id];
 }
 
@@ -20,7 +29,7 @@ var loop = function() {
 	}
 }
 
-logic = {
+var logic = {
 	"connectPlayer" : connectPlayer,
 	"players": players,
 	"loop": loop

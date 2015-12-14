@@ -24,7 +24,8 @@ io.on('connection', function(socket) {
 });
 
 var loopAsync = function() {
-  setImmediate(loop);
+  setTimeout(loop, 10);
+  //setImmediate(loop);
 }
 
 var now = Date.now();
@@ -52,7 +53,7 @@ function loop() {
     console.log("dt" + dt);
     dt -= rate;
     //if dt still > rate, repeat the following while true
-    logic.loop();
+    var updates = logic.loop();
     console.log(logic.players);
     io.sockets.emit('player-positions', logic.players);
     //io.to specific player
