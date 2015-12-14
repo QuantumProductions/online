@@ -4,6 +4,11 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var logic = require('./logic');
+var engine = require('./engine');
+
+var game = new engine.OnlineGame();
+game.add('p1', {'foo' : 3});
+console.log(game.things);
 
 app.use(express.static(path.join(__dirname, 'public')));
 server.listen(3000, function() {
@@ -38,23 +43,18 @@ function loop() {
   //game.loop();
   
   now = Date.now();
-  //console.log("now" + now);
   var delta = now - last;
-  //console.log("delta" + delta);
   last = now;
 
   dt = dt + delta;
 
   if (dt < rate) {
-    console.log("repeating with" + dt);
     loopAsync();
     return;
   } else {
-    console.log("dt" + dt);
     dt -= rate;
     //if dt still > rate, repeat the following while true
     var updates = logic.loop();
-    console.log(logic.players);
     io.sockets.emit('player-positions', logic.players);
     //io.to specific player
     loopAsync();
