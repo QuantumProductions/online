@@ -33,53 +33,34 @@ class Looper extends Component {
 
 class Mover extends Looper {
 	loop() {
-		// return;
-		console.log("looping in mover" + this.thing.x);
 		var velocity = this.thing.getValue('velocity');
-		console.log("velocity" + velocity.vx + "vy" + velocity.vy);
-		//return;
-		//velocity.vx = 3;
-		if (velocity.vx > 0) {
-		//	console.log("vx > 0");
-		}
-		var speed = 1.0; //this.thing.getValue('speed')['speed'];
+		var speed = 3.0; //this.thing.getValue('speed')['speed'];
 
 		var total = Math.abs(velocity.vx) + Math.abs(velocity.vy);
-		// console.log("PREtotal" + total);
 		if (total <= 0) {
 			return;
 		}
 
-		console.log("velocity.vx" + velocity.vx);
-		console.log("total" + total);
-		console.log("speed mod" + this.thing.speedMod());
 		var xx = velocity.vx / total * this.thing.speedMod();
-		console.log("xx" + xx);
-		//return;
 		var yy = velocity.vy / total * this.thing.speedMod();
-		
-		console.log("yy" + yy);
-
 		this.thing.x = this.thing.x + xx * speed;
-		console.log("new thing x " + this.thing.x);
 		this.thing.y = this.thing.y + yy * speed;
-		// this.thing.x += velocity.vx;
-		// this.thing.y += velocity.vy; //announce
 
-		if (this.thing.x > 100) {
-			this.thing.x = 10;
-		} else if (this.thing.x < 1) {
-			this.thing.x = 100;
-		}
+		// if (this.thing.x > 100) {
+		// 	this.thing.x = 10;
+		// } else if (this.thing.x < 1) {
+		// 	this.thing.x = 100;
+		// }
 	}
 }
 
 //input components
 
-class XWalker extends Component {
+class Walker extends Component {
 	constructor(options) {
 		super(options);
 		this.vx = 0;
+		this.vy = 0;
 	}
 
 	registrationNames() {
@@ -89,11 +70,7 @@ class XWalker extends Component {
 	getValue(name, hash) {
 		if (name == 'velocity') {
 			hash.vx = this.vx; //times speed
-			hash.vy = 0;
-			// if (!hash.vy) {
-			// 	hash.vy = 0;
-			// 	//console.log("EXPECTED 0");
-			// }
+			hash.vy = this.vy;
 		}
 
 		return hash;
@@ -108,33 +85,7 @@ class XWalker extends Component {
 			} else {
 				this.vx = 0;
 			}
-		}
-	}
-}
 
-class YWalker extends Component {
-	constructor(options) {
-		super(options);
-		this.vx = 0;
-	}
-
-	registrationNames() {
-		return ['input', 'velocity'];
-	}
-
-	getValue(name, hash) {
-		if (name == 'velocity') {
-			hash.vy = this.vy; //times speed
-			if (!hash.vx) {
-				hash.vx = 0;
-			}
-		}
-
-		return hash;
-	}
-
-	processEvent(name, eventer, hash) {
-		if (name == 'input') {
 			if (hash.up) {
 				this.vy = -1;
 			} else if (hash.down) {
@@ -220,7 +171,6 @@ class Thing {
 	}
 
 	loop() {
-		console.log("thing loop");
 		for (var i = 0; i < this.components.length; i++) {
 			var component = this.components[i];
 			component.loop();
@@ -238,10 +188,10 @@ class Thing {
 
 class Avatar extends Thing {
 	spawnComponents(options) {
-		return [new Mover(), new XWalker()];
+		return [new Mover(), new Walker()];
 	}
 }
 
 module.exports = {'Component' : Component, 'Thing' : Thing,
-'Mover' : Mover, 'Looper' : Looper, 'XWalker' : XWalker, 'YWalker' : YWalker,
+'Mover' : Mover, 'Looper' : Looper, 'Walker' : Walker,
 'Avatar' : Avatar};

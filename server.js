@@ -51,12 +51,7 @@ function loop() {
     var updates = game.loop();
     //emit things
     var rep = game.representationThings();
-    if (rep.players.length > 0) {
-      console.log(rep.players[0].x);
-    } else {
-//      console.log(game.things);       
-    }
-
+    
     io.sockets.emit("game.rep.things", rep);
     //io.to specific player
     loopAsync();
