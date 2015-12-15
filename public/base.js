@@ -33,28 +33,35 @@ class Looper extends Component {
 
 class Mover extends Looper {
 	loop() {
-		this.thing.x = 50;
-		this.thing.y = 50;
-		return;
+		// return;
 		console.log("looping in mover" + this.thing.x);
-		var velocity = {'vx' : 3, 'vy' : 0}; /// this.thing.getValue('velocity');
-		velocity.vx = 3;
+		var velocity = this.thing.getValue('velocity');
+		console.log("velocity" + velocity.vx + "vy" + velocity.vy);
+		//return;
+		//velocity.vx = 3;
 		if (velocity.vx > 0) {
 		//	console.log("vx > 0");
 		}
 		var speed = 1.0; //this.thing.getValue('speed')['speed'];
 
 		var total = Math.abs(velocity.vx) + Math.abs(velocity.vy);
+		// console.log("PREtotal" + total);
 		if (total <= 0) {
 			return;
 		}
 
-		var xx = velocity.mx / total * this.thing.speedMod();
-		var yy = velocity.my / total * this.thing.speedMod();
+		console.log("velocity.vx" + velocity.vx);
+		console.log("total" + total);
+		console.log("speed mod" + this.thing.speedMod());
+		var xx = velocity.vx / total * this.thing.speedMod();
 		console.log("xx" + xx);
+		//return;
+		var yy = velocity.vy / total * this.thing.speedMod();
+		
 		console.log("yy" + yy);
 
 		this.thing.x = this.thing.x + xx * speed;
+		console.log("new thing x " + this.thing.x);
 		this.thing.y = this.thing.y + yy * speed;
 		// this.thing.x += velocity.vx;
 		// this.thing.y += velocity.vy; //announce
@@ -82,6 +89,11 @@ class XWalker extends Component {
 	getValue(name, hash) {
 		if (name == 'velocity') {
 			hash.vx = this.vx; //times speed
+			hash.vy = 0;
+			// if (!hash.vy) {
+			// 	hash.vy = 0;
+			// 	//console.log("EXPECTED 0");
+			// }
 		}
 
 		return hash;
@@ -113,6 +125,9 @@ class YWalker extends Component {
 	getValue(name, hash) {
 		if (name == 'velocity') {
 			hash.vy = this.vy; //times speed
+			if (!hash.vx) {
+				hash.vx = 0;
+			}
 		}
 
 		return hash;
@@ -223,7 +238,7 @@ class Thing {
 
 class Avatar extends Thing {
 	spawnComponents(options) {
-		return [new Mover(), new XWalker(), new YWalker()];
+		return [new Mover(), new XWalker()];
 	}
 }
 

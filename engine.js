@@ -15,11 +15,6 @@ class ServerGame extends machine.Game {
 	}
 
 	input(socket, data) {
-		// if (data['right'] == true) {
-		// 	socket.player.x++;
-		// } else if (data['left'] == true) {
-		// 	socket.player.x--;
-		// }
 		socket.player.processEvent('input', {}, data);
 	}
 
