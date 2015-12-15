@@ -85,7 +85,6 @@ class OnlineClient {
 
 	parsePlayerInput(left, up, right, down, firing) {		
 		var hash = {'left' : left, 'right' : right, 'down' : down, 'up' : up, 'firing' : firing};
-		console.log(hash);
 		this.socket.emit('input', hash);
 	}
 

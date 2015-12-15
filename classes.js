@@ -8,6 +8,10 @@ class PillarAvatar extends base.Avatar {
 		this.x = Math.floor(Math.random() * 100);
 		this.y = Math.floor(Math.random() * 100);
 	}
+
+	loop() {
+		super.loop();
+	}
 }
 
 module.exports = {'PillarAvatar' : PillarAvatar};

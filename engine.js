@@ -16,10 +16,8 @@ class ServerGame extends machine.Game {
 
 	input(socket, data) {
 		if (data['right'] == true) {
-			//console.log("right is true");
 			socket.player.x++;
 		} else if (data['left'] == true) {
-			//console.log("left is true");
 			socket.player.x--;
 		}
 		socket.player.processEvent('input', {}, data);
@@ -29,14 +27,18 @@ class ServerGame extends machine.Game {
 	}
 
 	destroyThings(to_destroy, group_name) {
+		if (to_destroy.length > 0) {
+			console.log("destroying");
+		}
 		super.destroyThings(to_destroy, group_name);
 		//emit destruction;
 	}
 
-	groupLoop(group_name) { //possibly 
-		//var updates = super.groupLoop(group_name);
-		//async emit update
-	}
+	// groupLoop(group_name) { //possibly 
+	// 	super.groupLoop(group_name);
+	// 	//var updates = super.groupLoop(group_name);
+	// 	//async emit update
+	// }
 
 	connectPlayer(socket) {
 		//sub class
@@ -48,11 +50,14 @@ class ServerGame extends machine.Game {
 		for (var i = 0; i < group_names.length; i++) {
 			var groupRep = [];
 			var group = this.things[group_names[i]];
-			for (var ii = 0; ii < group.length; ii++) {
-				var thing = group[ii];
-				var rep = thing.representation();
-				groupRep.push(rep);
+			if (group) {
+				for (var ii = 0; ii < group.length; ii++) {
+					var thing = group[ii];
+					var rep = thing.representation();
+					groupRep.push(rep);
+				}	
 			}
+			
 			hash[group_names[i]] = groupRep;
 		}
 

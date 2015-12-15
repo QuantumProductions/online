@@ -95,6 +95,7 @@ class Game {
 		for (var i = 0; i < group.length; i++) {
 			var thing = group[i];
 			if (thing.active === true) {
+				console.log("looping thing");
 				thing.loop();
 				if (this.loopForGroup[group_name]) {
 					thing = this.loopForGroup[group_name](thing, this);
@@ -123,10 +124,11 @@ class Game {
 
 	loop() {
 		var group_names = this.groupNames();
-
+		//console.log(group_names);
 		for (var group_index = 0; group_index < group_names.length; group_index++) {
-
-			this.groupLoop(group_names[group_index]);
+			var name = group_names[group_index];
+			//console.log("name" + name);
+			this.groupLoop(name);
 		}
 	}
 
