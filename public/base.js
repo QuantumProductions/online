@@ -33,11 +33,14 @@ class Looper extends Component {
 
 class Mover extends Looper {
 	loop() {
+		this.thing.x = 50;
+		this.thing.y = 50;
+		return;
 		console.log("looping in mover" + this.thing.x);
-		var velocity = this.thing.getValue('velocity');
+		var velocity = {'vx' : 3, 'vy' : 0}; /// this.thing.getValue('velocity');
 		velocity.vx = 3;
 		if (velocity.vx > 0) {
-			console.log("vx > 0");
+		//	console.log("vx > 0");
 		}
 		var speed = 1.0; //this.thing.getValue('speed')['speed'];
 
@@ -48,11 +51,13 @@ class Mover extends Looper {
 
 		var xx = velocity.mx / total * this.thing.speedMod();
 		var yy = velocity.my / total * this.thing.speedMod();
+		console.log("xx" + xx);
+		console.log("yy" + yy);
 
 		this.thing.x = this.thing.x + xx * speed;
 		this.thing.y = this.thing.y + yy * speed;
-		this.thing.x += velocity.vx;
-		this.thing.y += velocity.vy; //announce
+		// this.thing.x += velocity.vx;
+		// this.thing.y += velocity.vy; //announce
 
 		if (this.thing.x > 100) {
 			this.thing.x = 10;
@@ -217,9 +222,9 @@ class Thing {
 }
 
 class Avatar extends Thing {
-	// spawnComponents(options) {
-	// 	return [new Mover(), new XWalker(), new YWalker()];
-	// }
+	spawnComponents(options) {
+		return [new Mover(), new XWalker(), new YWalker()];
+	}
 }
 
 module.exports = {'Component' : Component, 'Thing' : Thing,

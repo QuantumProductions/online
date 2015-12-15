@@ -95,17 +95,19 @@ class Game {
 		for (var i = 0; i < group.length; i++) {
 			var thing = group[i];
 			if (thing.active === true) {
-				console.log("looping thing");
+				console.log("looping thing" + thing.x);
 				thing.loop();
 				if (this.loopForGroup[group_name]) {
 					thing = this.loopForGroup[group_name](thing, this);
 				}
 				thing.afterLoop();	
+				console.log("finished looping thing" + this.things['players']);
 			}
 
 			this.checkBounds(group_name, thing);
 
 			if (this.shouldDestroyThing(group_name, thing)) {
+				console.log("destroying");
 				thing.gone = true;
 			}
 
@@ -118,8 +120,8 @@ class Game {
 			}
 		}
 
-		group = this.destroyThings(to_destroy, group_name);			
-		this.things[group_name] = group;
+		//group = this.destroyThings(to_destroy, group_name);			
+		//this.things[group_name] = group;
 	}
 
 	loop() {

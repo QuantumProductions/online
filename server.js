@@ -19,7 +19,7 @@ io.on('connection', function(socket) {
 
   game.connectPlayer(socket);
   console.log("Player count" + game.things['players'].length);
-
+  console.log(game.things['players']);
   socket.on('input', function(data) {
     game.input(socket, data);
   });
@@ -50,8 +50,13 @@ function loop() {
     //if dt still > rate, repeat the following while true
     var updates = game.loop();
     //emit things
-    //io.sockets.emit('game.', logic.players);
     var rep = game.representationThings();
+    if (rep.players.length > 0) {
+      console.log(rep.players[0].x);
+    } else {
+//      console.log(game.things);       
+    }
+
     io.sockets.emit("game.rep.things", rep);
     //io.to specific player
     loopAsync();

@@ -13,12 +13,8 @@ class PillarGame extends engine.ServerGame {
 	connectPlayer(socket) {
 		var player = new classes.PillarAvatar();
 		socket.player = player;
-		if (this.things['players']) {
-			console.log("ADDING player" + this.things['players'].length);	
-		}
 		
 		this.add('players', player);
-		console.log("added player" + this.things['players'].length);
 		//announce
 	}	
 
