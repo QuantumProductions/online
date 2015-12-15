@@ -5,8 +5,31 @@
   <script src="draw.js"></script>
   <script src="engine_rev.js"></script>
   <script>
+    var localTime = 0;
     var socket = io();
-    socket.on('connect', function() {
+    socket.on('connect', function(data) { configureSocket(socket) {
+      localTime = data['time'];
+    var client = this;
+     socket.on('game.rep.things', function(data) {
+      // if (data['bullets']) {
+      //  var bullets = data['bullets'];
+      //  console.log("data.bullets" + bullets[0].x);
+      // }
+      client.game.things['players'] = data['players'];
+      if (client.game.things['bullets']) {
+        if (client.game.things['bullets'].length < data['bullets'].length) {
+          client.game.things['bullets'] = data['bullets'];
+          console.log("bullets");
+        }
+      } else {
+        client.game.things['bullets'] = data['bullets'];
+        console.log("bullets fresh");
+      }
+       //client.game.things['players'] = data;
+       // console.log("player positions data" + data);
+       //console.log(window.client.game.things['players']);
+    });
+
       console.log("connected");
     });
 

@@ -12,12 +12,25 @@ class OnlineClient {
 
 	configureSocket(socket) {
 		var client = this;
+
+		socket.on('time', function(data) {
+			client.localTime = data['time'];
+		});
+
 		 socket.on('game.rep.things', function(data) {
 		 	// if (data['bullets']) {
 		 	// 	var bullets = data['bullets'];
 		 	// 	console.log("data.bullets" + bullets[0].x);
 		 	// }
-		 	client.game.things = data;
+		 	client.game.things['players'] = data['players'];
+
+		 	if (data['updates']) {
+		 		for (var i = 0; i < data['updates'].length; i++) {
+		 			var update = data['updates'][i];
+		 			client.game.add(update[0], update[1]);
+		 		}
+		 	}
+		 	
 	     //client.game.things['players'] = data;
 	     // console.log("player positions data" + data);
 	     //console.log(window.client.game.things['players']);
@@ -106,10 +119,18 @@ class OnlineClient {
 	}
 
 	loop() {
+		if (this.game.things && this.game.things['bullets']) {
+			for (var i = 0; i < this.game.things['bullets'].length; i++) {
+				var bullet = this.game.things['bullets'][i];
+				bullet.x += 4;
+			}
+		}
+
 		this.now = Date.now();
 		var delta  = this.now - this.last;
 		this.last = this.now;
 		this.dt = this.dt + delta;
+		this.localTime += delta;
 
 		if (this.dt > this.rate) {
 			this.draw();
@@ -127,6 +148,10 @@ class OnlineClient {
 
 		for (var group_index = 0; group_index < group_names.length; group_index++) {
 			var group = this.game.things[group_names[group_index]];
+
+			if (!group) {
+				continue;
+			}
 
 			for (var i = 0; i < group.length; i++) {
 				var thing = group[i];
