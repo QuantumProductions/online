@@ -21,6 +21,7 @@ io.on('connection', function(socket) {
   console.log("Player count" + game.things['players'].length);
   var rep = game.representationThings();
   console.log("rep" + rep['players'].length);
+  
   socket.emit("game.rep.things", rep);
 
   // socket.on('input', function(data) {

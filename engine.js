@@ -23,7 +23,7 @@ class ServerGame extends machine.Game {
 	}
 
 	groupLoop(group_name) { //possibly 
-		var updates = super.groupLoop(group_name);
+		//var updates = super.groupLoop(group_name);
 		//async emit update
 	}
 

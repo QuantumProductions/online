@@ -12,7 +12,7 @@ class OnlineClient {
 
 	configureSocket(socket) {
 		var client = this;
-		 socket.on('game.things', function(data) {
+		 socket.on('game.rep.things', function(data) {
 		 	client.game.things = data;
 	     //client.game.things['players'] = data;
 	     // console.log("player positions data" + data);
