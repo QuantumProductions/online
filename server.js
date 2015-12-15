@@ -10,17 +10,18 @@ var game = new hostedGame.HostedGame({'sockets' : io.sockets});
 
 app.use(express.static(path.join(__dirname, 'public')));
 server.listen(3000, function() {
-  console.log('listening');
+  //console.log('listening');
 });
 
 
 io.on('connection', function(socket) {
-  console.log('connected'); //extrac
+  //console.log('connected'); //extrac
 
   game.connectPlayer(socket);
-
-  //console.log("game.things['players']" + game.things['players']);;
-  socket.emit("game.things", game.things);
+  console.log("Player count" + game.things['players'].length);
+  var rep = game.representationThings();
+  console.log("rep" + rep['players'].length);
+  socket.emit("game.rep.things", rep);
 
   // socket.on('input', function(data) {
   //   game.input(socket, data);

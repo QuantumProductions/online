@@ -34,15 +34,15 @@ class Looper extends Component {
 class Mover extends Looper {
 	loop() {
 		var velocity = this.thing.getValue('velocity');
-		var speed = this.thing.getValue('speed')['speed'];
+		var speed = 1.0; //this.thing.getValue('speed')['speed'];
 
 		var total = Math.abs(velocity.vx) + Math.abs(velocity.vy);
 		if (total <= 0) {
 			return;
 		}
 
-		var xx = velocity.mx / total * this.speedMod();
-		var yy = velocity.my / total * this.speedMod();
+		var xx = velocity.mx / total * this.thing.speedMod();
+		var yy = velocity.my / total * this.thing.speedMod();
 
 		this.thing.x = this.thing.x + xx * speed;
 		this.thing.y = this.thing.y + yy * speed;
@@ -116,6 +116,10 @@ class YWalker extends Component {
 }
 
 class Thing {
+	speedMod() {
+		return 1.0;
+	}
+
 	spawnComponents(options) {
 		return [];
 	}

@@ -1,6 +1,11 @@
 "use strict";
 
 var machine = require('./public/machine.js');
+var base = require('./base.js');
+
+base.Thing.prototype.representation = function() {
+	return {'x' : this.x, 'y' : this.y}; //player id
+}
 
 class ServerGame extends machine.Game {
 	constructor(options) {
@@ -24,6 +29,23 @@ class ServerGame extends machine.Game {
 
 	connectPlayer(socket) {
 		//sub class
+	}
+
+	representationThings() {
+		var group_names = this.groupNames();
+		var hash = {};
+		for (var i = 0; i < group_names.length; i++) {
+			var groupRep = [];
+			var group = this.things[group_names[i]];
+			for (var ii = 0; ii < group.length; ii++) {
+				var thing = group[ii];
+				var rep = thing.representation();
+				groupRep.push(rep);
+			}
+			hash[group_names[i]] = groupRep;
+		}
+
+		return hash;
 	}
 }
 
