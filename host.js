@@ -1,10 +1,8 @@
 "use strict";
 
 var engine = require('./engine.js');
-var base = require('./base.js');
-
-var player = new base.Avatar();
-console.log(player.x);
+var base = require('./public/base.js');
+var classes = require('./classes.js');
 
 class PillarGame extends engine.ServerGame {
 	resetGame() {
@@ -13,7 +11,7 @@ class PillarGame extends engine.ServerGame {
 	}
 
 	connectPlayer(socket) {
-		var player = new base.Avatar();
+		var player = new classes.PillarAvatar();
 		if (this.things['players']) {
 			console.log("ADDING player" + this.things['players'].length);	
 		}

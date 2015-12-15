@@ -1,7 +1,7 @@
 "use strict";
 
 var machine = require('./public/machine.js');
-var base = require('./base.js');
+var base = require('./public/base.js');
 
 base.Thing.prototype.representation = function() {
 	return {'x' : this.x, 'y' : this.y}; //player id
