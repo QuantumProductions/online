@@ -13,14 +13,18 @@ server.listen(3000, function() {
   console.log('listening');
 });
 
+connect = function(socket) {
+  game.connectPlayer(socket);
+  console.log("game.things['players']" + game.things['players']);;
+}
 
 io.on('connection', function(socket) {
   console.log('connected'); //extrac
 
-  game.connectPlayer(socket);
-
+  connect(socket);
+  //game.connectPlayer(socket);
   //console.log("game.things['players']" + game.things['players']);;
-  socket.emit("game.things", game.things);
+// socket.emit("game.things", game.things);
 
   // socket.on('input', function(data) {
   //   game.input(socket, data);
