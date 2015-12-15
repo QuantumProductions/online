@@ -2,18 +2,11 @@
 
 var machine = require('./public/machine.js');
 
-class Player {
-	constructor(options) {
-		this.x = Math.floor(Math.random() * 100);
-		this.y = Math.floor(Math.random() * 100);
-	}
-}
-
-
 class ServerGame extends machine.Game {
 	constructor(options) {
 		super(options);
 		this.sockets = options['sockets'];
+		this.canvas = {'width' : 600, 'height' : 600};
 	}
 
 	setupOutput(options) {
@@ -30,8 +23,7 @@ class ServerGame extends machine.Game {
 	}
 
 	connectPlayer(socket) {
-		var player = new Player();
-		this.add('players', player);
+		//sub class
 	}
 }
 

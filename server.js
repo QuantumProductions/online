@@ -7,8 +7,6 @@ var logic = require('./logic');
 var hostedGame = require('./host');
 
 var game = new hostedGame.HostedGame({'sockets' : io.sockets});
-//game.add('p1', {'foo' : 3});
-console.log(game.things);
 
 app.use(express.static(path.join(__dirname, 'public')));
 server.listen(3000, function() {
@@ -21,13 +19,12 @@ io.on('connection', function(socket) {
 
   game.connectPlayer(socket);
 
-  console.log("game.things['players']" + game.things['players']);;
+  //console.log("game.things['players']" + game.things['players']);;
   socket.emit("game.things", game.things);
 
-  socket.on('input', function(data) {
-    //update input for player
-    logic.input(socket, data);
-  });
+  // socket.on('input', function(data) {
+  //   game.input(socket, data);
+  // });
 });
 
 var loopAsync = function() {
@@ -41,9 +38,6 @@ var dt = 0.00;
 var rate = 10;
 
 function loop() {
-  //process input
-  //game.loop();
-  
   now = Date.now();
   var delta = now - last;
   last = now;
@@ -56,7 +50,8 @@ function loop() {
   } else {
     dt -= rate;
     //if dt still > rate, repeat the following while true
-    var updates = logic.loop();
+    var updates = game.loop();
+    //emit things
     io.sockets.emit('player-positions', logic.players);
     //io.to specific player
     loopAsync();
