@@ -10,7 +10,7 @@ var game = new hostedGame.HostedGame({'sockets' : io.sockets});
 
 app.use(express.static(path.join(__dirname, 'public')));
 server.listen(3000, function() {
-  console.log('listening');
+  //console.log('listening');
 });
 
 connect = function(socket) {
@@ -19,16 +19,14 @@ connect = function(socket) {
 }
 
 io.on('connection', function(socket) {
-  console.log('connected'); //extrac
+  //console.log('connected'); //extrac
 
-  connect(socket);
-  //game.connectPlayer(socket);
-  //console.log("game.things['players']" + game.things['players']);;
-// socket.emit("game.things", game.things);
-
-  // socket.on('input', function(data) {
-  //   game.input(socket, data);
-  // });
+  game.connectPlayer(socket);
+  console.log("Player count" + game.things['players'].length);
+  console.log(game.things['players']);
+  socket.on('input', function(data) {
+    game.input(socket, data);
+  });
 });
 
 var loopAsync = function() {
@@ -56,7 +54,9 @@ function loop() {
     //if dt still > rate, repeat the following while true
     var updates = game.loop();
     //emit things
-    io.sockets.emit('player-positions', logic.players);
+    var rep = game.representationThings();
+    
+    io.sockets.emit("game.rep.things", rep);
     //io.to specific player
     loopAsync();
   }

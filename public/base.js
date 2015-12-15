@@ -5,13 +5,20 @@ class Component {
 		return [0];
 	}
 
+	resetCharge(index) {
+		this.charge[index] = this.maxCharge[index];
+	}
+
 	constructor(options) {
 		options = options || {};
-		this.charge = [0];
 		if (options['maxCharge']) {
 			this.maxCharge = options['maxCharge'];
 		} else {
 			this.maxCharge = this.defaultMaxCharge();
+		}
+		this.charge = [];
+		for (var i = 0; i < this.maxCharge.length; i++) {
+			this.charge.push(0);
 		}
 		
 	}
@@ -34,29 +41,33 @@ class Looper extends Component {
 class Mover extends Looper {
 	loop() {
 		var velocity = this.thing.getValue('velocity');
-		var speed = this.thing.getValue('speed')['speed'];
+		var speed = 3.0; //this.thing.getValue('speed')['speed'];
 
 		var total = Math.abs(velocity.vx) + Math.abs(velocity.vy);
 		if (total <= 0) {
 			return;
 		}
 
-		var xx = velocity.mx / total * this.speedMod();
-		var yy = velocity.my / total * this.speedMod();
-
+		var xx = velocity.vx / total * this.thing.speedMod();
+		var yy = velocity.vy / total * this.thing.speedMod();
 		this.thing.x = this.thing.x + xx * speed;
 		this.thing.y = this.thing.y + yy * speed;
-		this.thing.x += velocity.vx;
-		this.thing.y += velocity.vy; //announce
+
+		// if (this.thing.x > 100) {
+		// 	this.thing.x = 10;
+		// } else if (this.thing.x < 1) {
+		// 	this.thing.x = 100;
+		// }
 	}
 }
 
 //input components
 
-class XWalker extends Component {
+class Walker extends Component {
 	constructor(options) {
 		super(options);
 		this.vx = 0;
+		this.vy = 0;
 	}
 
 	registrationNames() {
@@ -66,6 +77,7 @@ class XWalker extends Component {
 	getValue(name, hash) {
 		if (name == 'velocity') {
 			hash.vx = this.vx; //times speed
+			hash.vy = this.vy;
 		}
 
 		return hash;
@@ -80,30 +92,7 @@ class XWalker extends Component {
 			} else {
 				this.vx = 0;
 			}
-		}
-	}
-}
 
-class YWalker extends Component {
-	constructor(options) {
-		super(options);
-		this.vx = 0;
-	}
-
-	registrationNames() {
-		return ['input', 'velocity'];
-	}
-
-	getValue(name, hash) {
-		if (name == 'velocity') {
-			hash.vy = this.vy; //times speed
-		}
-
-		return hash;
-	}
-
-	processEvent(name, eventer, hash) {
-		if (name == 'input') {
 			if (hash.up) {
 				this.vy = -1;
 			} else if (hash.down) {
@@ -116,6 +105,10 @@ class YWalker extends Component {
 }
 
 class Thing {
+	speedMod() {
+		return 1.0;
+	}
+
 	spawnComponents(options) {
 		return [];
 	}
@@ -182,6 +175,7 @@ class Thing {
 		
 		this.installComponents(options);
 		this.active = true;
+		this.updates = [];
 	}
 
 	loop() {
@@ -202,10 +196,10 @@ class Thing {
 
 class Avatar extends Thing {
 	spawnComponents(options) {
-		return [new Mover(), new XWalker(), new YWalker()];
+		return [new Mover(), new Walker()];
 	}
 }
 
 module.exports = {'Component' : Component, 'Thing' : Thing,
-'Mover' : Mover, 'Looper' : Looper, 'XWalker' : XWalker, 'YWalker' : YWalker,
+'Mover' : Mover, 'Looper' : Looper, 'Walker' : Walker,
 'Avatar' : Avatar};

@@ -12,11 +12,15 @@ class OnlineClient {
 
 	configureSocket(socket) {
 		var client = this;
-		 socket.on('game.things', function(data) {
+		 socket.on('game.rep.things', function(data) {
+		 	// if (data['bullets']) {
+		 	// 	var bullets = data['bullets'];
+		 	// 	console.log("data.bullets" + bullets[0].x);
+		 	// }
 		 	client.game.things = data;
 	     //client.game.things['players'] = data;
 	     // console.log("player positions data" + data);
-	     console.log(window.client.game.things['players']);
+	     //console.log(window.client.game.things['players']);
     });
 
 		this.socket = socket;
@@ -72,7 +76,7 @@ class OnlineClient {
 		window.addEventListener("keydown", this.onKeyDown.bind(this), true);
 		window.addEventListener("keyup", this.onKeyUp.bind(this), true);
 
-		this.key_pressed_map = [];
+		this.key_pressed_map = {'L1' : false, 'R1' : false, 'U1' : false, 'D1' : false, 'A1' : false};
 
 		this.key_map = {
 			37: 'L1',
@@ -83,21 +87,22 @@ class OnlineClient {
 		}
 	}
 
-	parsePlayerInput(key_pressed_map) {
+	parsePlayerInput(left, up, right, down, firing) {		
+		var hash = {'left' : left, 'right' : right, 'down' : down, 'up' : up, 'firing' : firing};
+		this.socket.emit('input', hash);
+	}
+
+	parsePlayer1Input(key_pressed_map) {
 		var left = key_pressed_map['L1'] == true;
 		var up = key_pressed_map['U1'] == true;
 		var right = key_pressed_map['R1'] == true;
 		var down = key_pressed_map['D1'] == true;
 		var firing = key_pressed_map['A1'] == true;
-		this.parsePlayerInput(left1, up1, right1, down1, firing1);
+		this.parsePlayerInput(left, up, right, down, firing);
 	}
 
-	parsePlayerInput(player, left, up, right, down, firing) {		
-		this.socket.emit('input', {'left' : left, 'right' : right, 'down' : down, 'up' : up, 'firing' : firing});
-	}
-
-	loopKeyboardInput() {
-		this.parsePlayerInput(this.key_pressed_map);
+	loopKeyboardInput(key_pressed_map) {
+		this.parsePlayer1Input(key_pressed_map);
 	}
 
 	loop() {
@@ -152,20 +157,21 @@ class OnlineClient {
 	}
 
 	onKeyDown(event) {
-		//event.preventDefault();
-		console.log("keydown");
+		event.preventDefault();
+		//console.log("keydown" + event.keyCode);
 		this.key_pressed_map[this.key_map[event.keyCode]] = true;
+		//console.log(this.key_pressed_map);
 	}
 
 	onMouseUp(event) {
 		var x = event.layerX;
 		var y = event.layerY;
-		this.game.onMouseUp(x, y);
+		//this.game.onMouseUp(x, y);
 	}
 
 	onMouseDown(event) {
 		var x = event.layerX;
 		var y = event.layerY;
-		this.game.onMouseDown(x, y);
+		//this.game.onMouseDown(x, y);
 	}
 }

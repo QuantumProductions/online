@@ -85,6 +85,7 @@ class Game {
 	}
 
 	groupLoop(group_name) {
+		var updates = [];
 		var to_destroy = [];
 
 		var group = this.things[group_name];
@@ -100,11 +101,14 @@ class Game {
 					thing = this.loopForGroup[group_name](thing, this);
 				}
 				thing.afterLoop();	
+				updates = updates.concat(thing.updates);
+				thing.updates = [];
 			}
 
 			this.checkBounds(group_name, thing);
 
 			if (this.shouldDestroyThing(group_name, thing)) {
+				console.log("destroying");
 				thing.gone = true;
 			}
 
@@ -117,17 +121,25 @@ class Game {
 			}
 		}
 
-		group = this.destroyThings(to_destroy, group_name);			
-		this.things[group_name] = group;
+		return updates;
+		//group = this.destroyThings(to_destroy, group_name);			
+		//this.things[group_name] = group;
 	}
 
 	loop() {
+		var updates = [];
 		var group_names = this.groupNames();
-
 		for (var group_index = 0; group_index < group_names.length; group_index++) {
-
-			this.groupLoop(group_names[group_index]);
+			var name = group_names[group_index];
+			updates = updates.concat(this.groupLoop(name));
 		}
+
+		for (var i = 0; i < updates.length; i++) {
+			var update = updates[i];
+			this.add(update[0], update[1]);
+		}
+
+		return updates;
 	}
 
 	destroyThingsInRadius(group_name, point, radius) {
