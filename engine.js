@@ -14,6 +14,17 @@ class ServerGame extends machine.Game {
 		this.canvas = {'width' : 600, 'height' : 600};
 	}
 
+	input(socket, data) {
+		if (data['right'] == true) {
+			//console.log("right is true");
+			socket.player.x++;
+		} else if (data['left'] == true) {
+			//console.log("left is true");
+			socket.player.x--;
+		}
+		socket.player.processEvent('input', {}, data);
+	}
+
 	setupOutput(options) {
 	}
 

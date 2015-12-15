@@ -20,9 +20,9 @@ io.on('connection', function(socket) {
   game.connectPlayer(socket);
   console.log("Player count" + game.things['players'].length);
 
-  // socket.on('input', function(data) {
-  //   game.input(socket, data);
-  // });
+  socket.on('input', function(data) {
+    game.input(socket, data);
+  });
 });
 
 var loopAsync = function() {

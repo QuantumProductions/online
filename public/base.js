@@ -34,6 +34,9 @@ class Looper extends Component {
 class Mover extends Looper {
 	loop() {
 		var velocity = this.thing.getValue('velocity');
+		if (velocity.vx > 0) {
+			console.log("vx > 0");
+		}
 		var speed = 1.0; //this.thing.getValue('speed')['speed'];
 
 		var total = Math.abs(velocity.vx) + Math.abs(velocity.vy);
