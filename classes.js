@@ -1,6 +1,7 @@
 "use strict";
 
 var base = require('./public/base.js');
+var script = require("./public/script.js");
 
 class PillarBullet extends base.Thing {
 	constructor(options) {
@@ -61,6 +62,61 @@ class PillarAvatar extends base.Avatar {
 		super(options);
 		this.x = Math.floor(Math.random() * 100);
 		this.y = Math.floor(Math.random() * 100);
+	}
+}
+
+class ShipChassis extends base.Component {
+	constructor(options) {
+		super(options);
+		this.shipScale = 1;
+		this.r = 0;
+	}
+
+	registrationNames() {
+		return ['vertexes', 'rotation'];
+	}
+
+	noseSpan() {
+		return 56 * this.shipScale;
+	}
+
+	wingSpan() {
+		return 18 * this.shipScale;
+	}
+
+	engineSpan() {
+		return 12 * this.shipScale;
+	}
+
+	shipVertexes(p0, p1, p2, p3) {
+		var points = [[this.thing.x, this.y + p0 * this.scale], [this.x - p1 * this.scale, this.thing.y],
+		       [this.thing.x, this.thing.y - p2 * this.scale], [this.x + p3 * this.scale, this.thing.y]];
+			
+		return script.pointArrayRotated(points, this.r, this.position());
+	}
+
+	vertexes() {
+		return this.shipVertexes(this.noseSpan(), this.wingSpan(), this.engineSpan(), this.wingSpan());
+	}
+
+	getValue(name, hash) {
+		if (name == 'vertexes') {
+			hash.hitboxVertexes = this.vertexes();	
+		} else if (name == 'rotation') {
+			hash.rotation = this.rotation;
+		} //redundant code... key value lookup?
+
+		return hash;
+	}
+}
+
+class OnlineComboPilot extends base.Thing {
+	spawnComponents(options) {
+		return [new ShipChassis()];
+	}
+
+	representation() {
+		return {'x' : this.x, 'y' : this.y, 'r' : this.getValue('rotation')};
 	}
 }
 
