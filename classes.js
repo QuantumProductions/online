@@ -116,7 +116,7 @@ class ShipChassis extends base.Component {
 				if (this.r < 0) {
 					this.r = 359;
 				}
-			} else {
+			} else if (hash.right) {
 				this.r++;
 				if (this.r > 360) {
 					this.r = 1;
@@ -139,7 +139,6 @@ class OnlineComboPilot extends base.Thing {
 
 	representation() {
 		var rotation  = this.getValue('rotation').rotation;
-		console.log("this.getValue('rotation').rotation" + rotation);
 		return {'x' : this.x, 'y' : this.y, 'r' : rotation};
 	}
 }
