@@ -157,7 +157,8 @@ class OnlineClient {
 		var group_names = this.game.groupNames();
 
 		for (var group_index = 0; group_index < group_names.length; group_index++) {
-			var group = this.game.things[group_names[group_index]];
+			var groupName = group_names[group_index];
+			var group = this.game.things[groupName];
 
 			if (!group) {
 				continue;
@@ -165,7 +166,10 @@ class OnlineClient {
 
 			for (var i = 0; i < group.length; i++) {
 				var thing = group[i];
-				debugDraw(thing, this, this.context());
+				//debugDraw(thing, this, this.context());
+				if (groupName == 'players') {
+					draws[groupName](thing, this, this.context());
+				}
 			}
 
 

@@ -11,7 +11,7 @@ class PillarGame extends engine.ServerGame {
 	}
 
 	connectPlayer(socket) {
-		var player = new classes.PillarAvatar();
+		var player = new classes.OnlineComboPilot();
 		socket.player = player;
 		
 		this.add('players', player);

@@ -73,7 +73,7 @@ class ShipChassis extends base.Component {
 	}
 
 	registrationNames() {
-		return ['vertexes', 'rotation'];
+		return ['vertexes', 'rotation', 'input'];
 	}
 
 	noseSpan() {
@@ -103,21 +103,45 @@ class ShipChassis extends base.Component {
 		if (name == 'vertexes') {
 			hash.hitboxVertexes = this.vertexes();	
 		} else if (name == 'rotation') {
-			hash.rotation = this.rotation;
+			hash.rotation = this.r;
 		} //redundant code... key value lookup?
 
 		return hash;
 	}
+
+	processEvent(name, eventer, hash) {
+		if (name == 'input') {
+			if (hash.left) {
+				this.r--;
+				if (this.r < 0) {
+					this.r = 359;
+				}
+			} else {
+				this.r++;
+				if (this.r > 360) {
+					this.r = 1;
+				}
+			}
+		}
+	}
 }
 
 class OnlineComboPilot extends base.Thing {
+	constructor(options) {
+		super(options);
+		this.x = Math.floor(Math.random() * 100);
+		this.y = Math.floor(Math.random() * 100);
+	}
+
 	spawnComponents(options) {
 		return [new ShipChassis()];
 	}
 
 	representation() {
-		return {'x' : this.x, 'y' : this.y, 'r' : this.getValue('rotation')};
+		var rotation  = this.getValue('rotation').rotation;
+		console.log("this.getValue('rotation').rotation" + rotation);
+		return {'x' : this.x, 'y' : this.y, 'r' : rotation};
 	}
 }
 
-module.exports = {'PillarAvatar' : PillarAvatar};
+module.exports = {'PillarAvatar' : PillarAvatar, 'OnlineComboPilot' : OnlineComboPilot};
