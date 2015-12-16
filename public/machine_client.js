@@ -24,13 +24,12 @@ class OnlineClient {
 		 	// }
 		 	client.game.things['players'] = data['players'];
 
-		 	if (data['updates']) {
+		 	if (data['updates'].length > 0) {
 		 		for (var i = 0; i < data['updates'].length; i++) {
 		 			var update = data['updates'][i];
 		 			client.game.add(update[0], update[1]);
 		 		}
 		 	}
-		 	
 	     //client.game.things['players'] = data;
 	     // console.log("player positions data" + data);
 	     //console.log(window.client.game.things['players']);
@@ -102,7 +101,18 @@ class OnlineClient {
 
 	parsePlayerInput(left, up, right, down, firing) {		
 		var hash = {'left' : left, 'right' : right, 'down' : down, 'up' : up, 'firing' : firing};
-		this.socket.emit('input', hash);
+		if (left || up || right || down || firing) {
+			this.socket.emit('input', hash);	
+			this.zeroInput = false;
+		} else {
+			if (this.zeroInput) {
+
+			} else {
+				this.socket.emit('input', hash);	
+				this.zeroInput = true;
+			}
+		}
+		
 	}
 
 	parsePlayer1Input(key_pressed_map) {
@@ -132,7 +142,7 @@ class OnlineClient {
 		this.dt = this.dt + delta;
 		this.localTime += delta;
 
-		if (this.dt > this.rate) {
+		while (this.dt > this.rate) {
 			this.draw();
 			this.dt = this.dt - this.rate;
 			this.loopKeyboardInput(this.key_pressed_map);

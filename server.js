@@ -16,7 +16,7 @@ server.listen(3000, function() {
 var now = Date.now();
 var last = now;
 var dt = 0.00;
-var rate = 30;
+var rate = 10;
 
 var originTime = Date.now();
 

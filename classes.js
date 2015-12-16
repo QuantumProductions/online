@@ -50,8 +50,6 @@ class PillarShooter extends base.Component {
 			}
 		}
 	}
-
-
 }
 
 class PillarAvatar extends base.Avatar {
