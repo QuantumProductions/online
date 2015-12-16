@@ -117,11 +117,11 @@ var thrustFace = function(thing) {
 var applyThrust = function(thing) {
     var origin = {'x' : thing.x, 'y': thing.y};
     var tp = [thing.x, thing.y + 1];
-    var np = rotate_point(tp[0], tp[1], origin.x, origin.y, thing.r);
+    var np = rotate_point(tp[0], tp[1], origin.x, origin.y, thing.getValue('rotation').rotation );
     thing.tx = np.x - thing.x;
     thing.ty = np.y - thing.y;
-    thing.x = thing.x + thing.thrustX();
-    thing.y = thing.y + thing.thrustY();
+    thing.x = thing.x + thing.tx; //* 3; // * speed //thing.thrustX();
+    thing.y = thing.y + thing.ty; // * 3; // thing.thrustY();
 }
 
-module.exports = {'pointArrayRotated' : pointArrayRotated};
+module.exports = {'pointArrayRotated' : pointArrayRotated, 'applyThrust' : applyThrust};

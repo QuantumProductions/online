@@ -95,6 +95,11 @@ class ShipChassis extends base.Component {
 		return script.pointArrayRotated(points, this.r, this.position());
 	}
 
+	loop() {
+		super.loop();
+		script.applyThrust(this.thing);
+	}
+
 	vertexes() {
 		return this.shipVertexes(this.noseSpan(), this.wingSpan(), this.engineSpan(), this.wingSpan());
 	}
@@ -122,6 +127,10 @@ class ShipChassis extends base.Component {
 					this.r = 1;
 				}
 			}
+
+			// if (hash.up) {
+			// 	this.
+			// }
 		}
 	}
 }
