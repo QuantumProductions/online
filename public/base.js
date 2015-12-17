@@ -192,6 +192,10 @@ class Thing {
 	position() {
 		return {'x' : this.x, 'y' : this.y};
 	}
+
+	representation() {
+		return this.position();	
+	}
 }
 
 class Avatar extends Thing {

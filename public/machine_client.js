@@ -130,6 +130,7 @@ class OnlineClient {
 
 	loop() {
 		if (this.game.things && this.game.things['bullets']) {
+			console.log("bullets");
 			for (var i = 0; i < this.game.things['bullets'].length; i++) {
 				var bullet = this.game.things['bullets'][i];
 				bullet.x += 4;
@@ -167,9 +168,9 @@ class OnlineClient {
 			for (var i = 0; i < group.length; i++) {
 				var thing = group[i];
 				//debugDraw(thing, this, this.context());
-				if (groupName == 'players') {
+				//if (groupName == 'players') {
 					draws[groupName](thing, this, this.context());
-				}
+				//}
 			}
 
 

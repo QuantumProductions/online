@@ -64,8 +64,11 @@ function loop() {
     }
   
     var rep = game.representationThings();
+    //if (updates.length > 0) {
+  //    console.log("represented" + Object.keys(updates[0]));  
+    //}
+    
     rep = {'players' : rep['players'], 'updates' : updates};
-
     io.sockets.emit("game.rep.things", rep);
     //io.to specific player
     loopAsync();

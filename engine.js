@@ -51,6 +51,8 @@ class ServerGame extends machine.Game {
 				for (var ii = 0; ii < group.length; ii++) {
 					var thing = group[ii];
 					var rep = thing.representation();
+					// console.log("repped" + O);
+					console.log("rep" + Object.keys(rep));
 					groupRep.push(rep);
 				}	
 			}

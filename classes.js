@@ -135,6 +135,93 @@ class ShipChassis extends base.Component {
 	}
 }
 
+class Rotator extends base.Component {
+	constructor(options) {
+		super(options);
+		console.log("rotator options" + Object.keys(options));
+		this.r = options['r'];
+		console.log("assigned r" + this.r);
+	}
+
+	registrationNames() {
+		return ['rotation'];
+	}
+
+	getValue(name, hash) {
+		console.log("getting" + name + "value" + this.r);
+		hash.rotation = this.r;
+		return hash;
+	}
+}
+
+class Rocket extends base.Thing { //should thrust rotator be its own component?
+	spawnComponents(options) {
+		console.log("spawning a rocket");
+		return [];
+		// return [new Rotator(options)];
+	}
+
+	constructor(options) {
+		super(options);
+		this.x = options['x'];
+		this.y = options['y'];
+		this.r = options['r'];
+	}
+
+	loop() {
+		super.loop();
+		console.log("looping in rocket");
+		script.applyThrust(this);
+		console.log("applied thrust in rocket loop");
+	}
+
+	getValue(name) {
+		if (name == 'rotation') {
+			return {'rotation' : this.r};
+		}
+		
+		return super.getValue(name);
+	}
+
+	representation() {
+		console.log("representing rocket" + this.y);
+		return {'x' : this.x, 'y' : this.y}; //this.getValue('rotation').rotation};
+	}
+}
+
+class RocketLauncher extends base.Component {
+	defaultMaxCharge() {
+		return [70];
+	}
+
+	registrationNames() {
+		return ['input'];
+	}
+
+	loop() {
+		this.charge[0]--;
+		if (this.charge[0] <= 0) {
+			this.charge[0] = 0;
+		}
+	}
+
+	processEvent(name, eventer, hash) {
+		if (name == 'input') {
+			if (hash.firing) {
+				if (this.charge[0] <= 0) {
+					this.resetCharge(0); //extract to a do something & reset.. extract reset to standard this.resetCharge()
+					var rocket = new Rocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : 0});
+					// var rocket = new base.Thing();
+					// rocket.x = 25;
+					// rocket.y = 25;
+					this.thing.updates.push(['bullets', rocket]);
+				}
+			}
+		}
+	}
+
+}
+
 class OnlineComboPilot extends base.Thing {
 	constructor(options) {
 		super(options);
@@ -143,7 +230,7 @@ class OnlineComboPilot extends base.Thing {
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis()];
+		return [new ShipChassis(), new RocketLauncher()];
 	}
 
 	representation() {

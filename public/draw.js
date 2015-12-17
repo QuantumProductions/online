@@ -46,5 +46,8 @@ var draws = {'players' : function(thing, client, context) {
 	context.stroke();
 	context.fill();
 	context.closePath();
-
-}};
+},
+'bullets' : function(thing, client, context) {
+	debugDraw(thing, client, context);
+}
+};
