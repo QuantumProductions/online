@@ -37,6 +37,17 @@ class ServerGame extends machine.Game {
 	// 	//async emit update
 	// }
 
+	loop() {
+		var updates = super.loop();
+		for (var i = 0; i < updates.length; i++) {
+			var update = updates[i][1];
+			console.log("update is " + update);
+			updates[i][1] = update.representation();
+		}
+
+		return updates;
+	}
+
 	connectPlayer(socket) {
 		//sub class
 	}
@@ -51,8 +62,6 @@ class ServerGame extends machine.Game {
 				for (var ii = 0; ii < group.length; ii++) {
 					var thing = group[ii];
 					var rep = thing.representation();
-					// console.log("repped" + O);
-					console.log("rep" + Object.keys(rep));
 					groupRep.push(rep);
 				}	
 			}

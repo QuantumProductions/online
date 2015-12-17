@@ -3,6 +3,28 @@
 var base = require('./public/base.js');
 var script = require("./public/script.js");
 
+class PillarRocket extends base.Thing {
+	spawnComponents(options) {
+		console.log("pillar rocket options" + options.r);
+		return super.spawnComponents(options).concat([new Rotator(options)]);
+	}
+
+	constructor(options) {
+		super(options);
+		this.x = options['x'];
+		this.y = options['y'];
+	}
+
+	representation() {
+		return {'x' : this.x, 'y' :this.y, 'r' : this.getValue('rotation').rotation};
+	}
+
+	loop() {
+		super.loop();
+		script.applyThrust(this);
+	}
+}
+
 class PillarBullet extends base.Thing {
 	constructor(options) {
 		super(options);
@@ -43,10 +65,7 @@ class PillarShooter extends base.Component {
 		if (name == 'input') {
 			if (hash.firing) {
 				if (this.charge[0] <= 0) {
-					this.resetCharge(0); //extract to a do something & reset.. extract reset to standard this.resetCharge()
-					var bullet = new PillarBullet({'x' : this.thing.x, 'y' : this.thing.y, 'vx' : 4, 'vy' : 0});
-					//console.log("bullet rep" + bullet.representation().x);
-					this.thing.updates.push(['bullets', bullet]);
+					// 
 				}
 			}
 		}
@@ -138,17 +157,18 @@ class ShipChassis extends base.Component {
 class Rotator extends base.Component {
 	constructor(options) {
 		super(options);
-		console.log("rotator options" + Object.keys(options));
 		this.r = options['r'];
-		console.log("assigned r" + this.r);
+		console.log("ROTATOR" + this.r);
 	}
 
+	// registrationNames() {
+	// 	return [];
+	// }
 	registrationNames() {
 		return ['rotation'];
 	}
 
 	getValue(name, hash) {
-		console.log("getting" + name + "value" + this.r);
 		hash.rotation = this.r;
 		return hash;
 	}
@@ -156,36 +176,32 @@ class Rotator extends base.Component {
 
 class Rocket extends base.Thing { //should thrust rotator be its own component?
 	spawnComponents(options) {
-		console.log("spawning a rocket");
-		return [];
-		// return [new Rotator(options)];
+	//	return [];
+		return [new Rotator(options)];
 	}
 
 	constructor(options) {
 		super(options);
 		this.x = options['x'];
 		this.y = options['y'];
-		this.r = options['r'];
+//		this.r = options['r'];
 	}
 
 	loop() {
 		super.loop();
-		console.log("looping in rocket");
 		script.applyThrust(this);
-		console.log("applied thrust in rocket loop");
 	}
 
-	getValue(name) {
-		if (name == 'rotation') {
-			return {'rotation' : this.r};
-		}
+	// getValue(name) {
+	// 	if (name == 'rotation') {
+	// 		return {'rotation' : this.r};
+	// 	}
 		
-		return super.getValue(name);
-	}
+	// 	return super.getValue(name);
+	// }
 
 	representation() {
-		console.log("representing rocket" + this.y);
-		return {'x' : this.x, 'y' : this.y}; //this.getValue('rotation').rotation};
+		return {'x' : this.x, 'y' : this.y, 'r' : this.getValue('rotation').rotation};
 	}
 }
 
@@ -210,7 +226,10 @@ class RocketLauncher extends base.Component {
 			if (hash.firing) {
 				if (this.charge[0] <= 0) {
 					this.resetCharge(0); //extract to a do something & reset.. extract reset to standard this.resetCharge()
-					var rocket = new Rocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : 0});
+					var rotating =this.thing.getValue('rotation').rotation;
+					console.log("rotating" + rotating);
+					var rocket = new Rocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : rotating});
+					//var rocket = new PillarRocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : 0});
 					// var rocket = new base.Thing();
 					// rocket.x = 25;
 					// rocket.y = 25;

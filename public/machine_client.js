@@ -130,10 +130,10 @@ class OnlineClient {
 
 	loop() {
 		if (this.game.things && this.game.things['bullets']) {
-			console.log("bullets");
 			for (var i = 0; i < this.game.things['bullets'].length; i++) {
 				var bullet = this.game.things['bullets'][i];
-				bullet.x += 4;
+				applyThrust(bullet);
+				//bullet.x += 4;
 			}
 		}
 

@@ -23,17 +23,13 @@ var originTime = Date.now();
 connect = function(socket) {
 
   game.connectPlayer(socket);
-  console.log("game.things['players']" + game.things['players']);;
 }
 
 io.on('connection', function(socket) {
-  //console.log('connected'); //extrac
 
   game.connectPlayer(socket);
   socket.emit('time', {'time' : originTime});
 
-  console.log("Player count" + game.things['players'].length);
-  console.log(game.things['players']);
   socket.on('input', function(data) {
     game.input(socket, data);
   });
@@ -62,13 +58,10 @@ function loop() {
       dt -= rate;
       updates = updates.concat(game.loop());
     }
-  
-    var rep = game.representationThings();
-    //if (updates.length > 0) {
-  //    console.log("represented" + Object.keys(updates[0]));  
-    //}
     
-    rep = {'players' : rep['players'], 'updates' : updates};
+    var rep = game.representationThings();
+    
+    rep = {'players' : rep['players'], 'updates' : updates}; // 'updates' : updates};
     io.sockets.emit("game.rep.things", rep);
     //io.to specific player
     loopAsync();
