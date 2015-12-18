@@ -5,7 +5,6 @@ var script = require("./public/script.js");
 
 class PillarRocket extends base.Thing {
 	spawnComponents(options) {
-		console.log("pillar rocket options" + options.r);
 		return super.spawnComponents(options).concat([new Rotator(options)]);
 	}
 
@@ -136,20 +135,16 @@ class ShipChassis extends base.Component {
 	processEvent(name, eventer, hash) {
 		if (name == 'input') {
 			if (hash.left) {
-				this.r--;
+				this.r-= 2;
 				if (this.r < 0) {
-					this.r = 359;
+					this.r = 358;
 				}
 			} else if (hash.right) {
-				this.r++;
+				this.r+= 2;
 				if (this.r > 360) {
-					this.r = 1;
+					this.r = 2;
 				}
 			}
-
-			// if (hash.up) {
-			// 	this.
-			// }
 		}
 	}
 }
@@ -158,12 +153,8 @@ class Rotator extends base.Component {
 	constructor(options) {
 		super(options);
 		this.r = options['r'];
-		console.log("ROTATOR" + this.r);
 	}
 
-	// registrationNames() {
-	// 	return [];
-	// }
 	registrationNames() {
 		return ['rotation'];
 	}
@@ -174,17 +165,31 @@ class Rotator extends base.Component {
 	}
 }
 
+class Speeder extends base.Component {
+	constructor(options) {
+		super(options);
+		this.speed = options['speed'];
+	}
+
+	registrationNames() {
+		return ['speed'];
+	}
+
+	getValue(name, hash) {
+		hash.speed = this.speed;
+		return hash;
+	}
+}
+
 class Rocket extends base.Thing { //should thrust rotator be its own component?
 	spawnComponents(options) {
-	//	return [];
-		return [new Rotator(options)];
+		return [new Rotator(options), new Speeder({'speed' : 7})];
 	}
 
 	constructor(options) {
 		super(options);
 		this.x = options['x'];
 		this.y = options['y'];
-//		this.r = options['r'];
 	}
 
 	loop() {
@@ -192,16 +197,8 @@ class Rocket extends base.Thing { //should thrust rotator be its own component?
 		script.applyThrust(this);
 	}
 
-	// getValue(name) {
-	// 	if (name == 'rotation') {
-	// 		return {'rotation' : this.r};
-	// 	}
-		
-	// 	return super.getValue(name);
-	// }
-
 	representation() {
-		return {'x' : this.x, 'y' : this.y, 'r' : this.getValue('rotation').rotation};
+		return {'x' : this.x, 'y' : this.y, 'r' : this.getValue('rotation').rotation, 'speed' : this.getValue('speed').speed};
 	}
 }
 
@@ -227,7 +224,6 @@ class RocketLauncher extends base.Component {
 				if (this.charge[0] <= 0) {
 					this.resetCharge(0); //extract to a do something & reset.. extract reset to standard this.resetCharge()
 					var rotating =this.thing.getValue('rotation').rotation;
-					console.log("rotating" + rotating);
 					var rocket = new Rocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : rotating});
 					//var rocket = new PillarRocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : 0});
 					// var rocket = new base.Thing();
@@ -249,7 +245,7 @@ class OnlineComboPilot extends base.Thing {
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis(), new RocketLauncher()];
+		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 1})];
 	}
 
 	representation() {

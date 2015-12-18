@@ -121,11 +121,16 @@ var applyThrust = function(thing) {
     if (!rotation) {
         rotation = thing.getValue('rotation').rotation;
     }
+
+    var speed = thing.speed;
+    if (!speed) {
+        speed = thing.getValue('speed').speed;
+    }
     var np = rotate_point(tp[0], tp[1], origin.x, origin.y, rotation);
     thing.tx = np.x - thing.x;
     thing.ty = np.y - thing.y;
-    thing.x = thing.x + thing.tx; //* 3; // * speed //thing.thrustX();
-    thing.y = thing.y + thing.ty; // * 3; // thing.thrustY();
+    thing.x = thing.x + thing.tx * speed;
+    thing.y = thing.y + thing.ty * speed;
 }
 
 module.exports = {'pointArrayRotated' : pointArrayRotated, 'applyThrust' : applyThrust};
