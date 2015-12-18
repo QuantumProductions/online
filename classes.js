@@ -241,12 +241,12 @@ class RocketLauncher extends base.Component {
 class OnlineComboPilot extends base.Thing {
 	constructor(options) {
 		super(options);
-		this.x = Math.floor(Math.random() * 100);
-		this.y = Math.floor(Math.random() * 100);
+		this.x = Math.floor(Math.random() * 200);
+		this.y = Math.floor(Math.random() * 200);
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 1})];
+		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 0.05}), new base.MomentumMover()];
 	}
 
 	representation() {

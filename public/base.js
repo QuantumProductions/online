@@ -63,6 +63,12 @@ class MomentumMover extends Component {
 		}
 	}
 
+	loop() {
+		super.loop();
+		this.thing.x += this.mx;
+		this.thing.y += this.my;
+	}
+
 
 }
 
@@ -234,4 +240,4 @@ class Avatar extends Thing {
 
 module.exports = {'Component' : Component, 'Thing' : Thing,
 'Mover' : Mover, 'Looper' : Looper, 'Walker' : Walker,
-'Avatar' : Avatar};
+'Avatar' : Avatar, 'MomentumMover' : MomentumMover};
