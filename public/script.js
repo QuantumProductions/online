@@ -118,6 +118,7 @@ var applyThrust = function(thing) {
     var origin = {'x' : thing.x, 'y': thing.y};
     var tp = [thing.x, thing.y + 1];
     var rotation = thing.r;
+    rotation = 0;
     if (!rotation) {
         rotation = thing.getValue('rotation').rotation;
     }
@@ -133,4 +134,5 @@ var applyThrust = function(thing) {
     thing.y = thing.y + thing.ty * speed;
 }
 
-module.exports = {'pointArrayRotated' : pointArrayRotated, 'applyThrust' : applyThrust};
+module.exports = {'pointArrayRotated' : pointArrayRotated, 'applyThrust' : applyThrust, 
+'polygonContainsPoint' : polygonContainsPoint};

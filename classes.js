@@ -107,10 +107,11 @@ class ShipChassis extends base.Component {
 	}
 
 	shipVertexes(p0, p1, p2, p3) {
-		var points = [[this.thing.x, this.y + p0 * this.scale], [this.x - p1 * this.scale, this.thing.y],
-		       [this.thing.x, this.thing.y - p2 * this.scale], [this.x + p3 * this.scale, this.thing.y]];
+		var points = [[this.thing.x, this.thing.y + p0 * this.shipScale], [this.thing.x - p1 * this.shipScale, this.thing.y],
+		       [this.thing.x, this.thing.y - p2 * this.shipScale], [this.thing.x + p3 * this.shipScale, this.thing.y]];
+		console.log("points" + points);
 			
-		return script.pointArrayRotated(points, this.r, this.position());
+		return script.pointArrayRotated(points, this.r, this.thing.position());
 	}
 
 	loop() {
@@ -245,7 +246,7 @@ class OnlineComboPilot extends base.Thing {
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 1})];
+		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 0.1})];
 	}
 
 	representation() {

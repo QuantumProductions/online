@@ -38,6 +38,34 @@ class Looper extends Component {
 	}
 }
 
+class MomentumMover extends Component {
+	constructor(options) {
+		super(options);
+		this.mx = 0;
+		this.my = 0;
+	}
+
+	registrationNames() {
+		return ['velocity', 'elasticCollision'];
+	}	
+
+	getValue(name, hash) {
+		if (name == 'velocity') {
+			hash.vx += this.mx;
+			hash.vy += this.my;
+		}
+	}
+
+	processEvent(name, eventer, hash) {
+		if (name == 'elasticCollision') {
+			this.mx += hash.vx;
+			this.my += hash.vy;
+		}
+	}
+
+
+}
+
 class Mover extends Looper {
 	loop() {
 		var velocity = this.thing.getValue('velocity');

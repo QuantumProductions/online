@@ -41,7 +41,6 @@ class ServerGame extends machine.Game {
 		var updates = super.loop();
 		for (var i = 0; i < updates.length; i++) {
 			var update = updates[i][1];
-			console.log("update is " + update);
 			updates[i][1] = update.representation();
 		}
 
