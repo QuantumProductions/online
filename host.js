@@ -15,7 +15,7 @@ class PillarGame extends engine.ServerGame {
 	connectPlayer(socket) {
 		var player = new classes.OnlineComboPilot();
 		socket.player = player;
-		
+		player.socketId = socket.id;
 		this.add('players', player);
 		//announce
 	}	
@@ -34,12 +34,16 @@ class PillarGame extends engine.ServerGame {
 	}
 
 	evaluateRocketCollision(thing, pilot) {
+		if (thing.owner == pilot.socketId) {
+			return thing;
+		}
 		var vertexes = pilot.getValue('vertexes').hitboxVertexes;
 		var hit = script.polygonContainsPoint(thing.position(), vertexes);
 		// console.log('vertexes' + vertexes);
 		// console.log("position" + thing.position() + " hit" + hit);
 		if (hit) {
-			console.log("hit");
+			pilot.x = 50;
+			pilot.y = 50;
 			// var rocketSpeed = thing.getValue('speed').speed;
 			// var rocketVel = $V([thing.tx * rocketSpeed, thing.ty * rocketSpeed]); //extract this?
 

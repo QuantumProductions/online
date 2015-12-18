@@ -118,11 +118,10 @@ var applyThrust = function(thing) {
     var origin = {'x' : thing.x, 'y': thing.y};
     var tp = [thing.x, thing.y + 1];
     var rotation = thing.r;
-    rotation = 0;
     if (!rotation) {
         rotation = thing.getValue('rotation').rotation;
     }
-
+    
     var speed = thing.speed;
     if (!speed) {
         speed = thing.getValue('speed').speed;

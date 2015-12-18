@@ -109,7 +109,6 @@ class ShipChassis extends base.Component {
 	shipVertexes(p0, p1, p2, p3) {
 		var points = [[this.thing.x, this.thing.y + p0 * this.shipScale], [this.thing.x - p1 * this.shipScale, this.thing.y],
 		       [this.thing.x, this.thing.y - p2 * this.shipScale], [this.thing.x + p3 * this.shipScale, this.thing.y]];
-		console.log("points" + points);
 			
 		return script.pointArrayRotated(points, this.r, this.thing.position());
 	}
@@ -226,6 +225,7 @@ class RocketLauncher extends base.Component {
 					this.resetCharge(0); //extract to a do something & reset.. extract reset to standard this.resetCharge()
 					var rotating =this.thing.getValue('rotation').rotation;
 					var rocket = new Rocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : rotating});
+					rocket.owner = this.thing.socketId;
 					//var rocket = new PillarRocket({'x' : this.thing.x, 'y' : this.thing.y, 'r' : 0});
 					// var rocket = new base.Thing();
 					// rocket.x = 25;
@@ -246,12 +246,12 @@ class OnlineComboPilot extends base.Thing {
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 0.1})];
+		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 1})];
 	}
 
 	representation() {
 		var rotation  = this.getValue('rotation').rotation;
-		return {'x' : this.x, 'y' : this.y, 'r' : rotation};
+		return {'x' : this.x, 'y' : this.y, 'r' : rotation, 'speed' : this.getValue('speed').speed};
 	}
 }
 
