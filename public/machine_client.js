@@ -10,6 +10,44 @@ class OnlineClient {
 		this.installLoops();
 	}
 
+	updateFromSocketData(data) {
+	 	// if (data['bullets']) {
+	 	// 	var bullets = data['bullets'];
+	 	// 	console.log("data.bullets" + bullets[0].x);
+	 	// }
+	 	var playerCount = 0;
+	 	if (client.game.things['players']) {
+	 		playerCount = client.game.things['players'].length;
+	 	}
+	 	var i = 0;
+	 	for (i = 0; i < playerCount; i++) {
+	 		var serverPlayer = data['players'][i];
+	 		var localPlayer = client.game.things['players'][i];
+	 		if (getDistance(serverPlayer, localPlayer) > 20) {
+	 			localPlayer.x = serverPlayer.x;
+	 			localPlayer.y = serverPlayer.y;	
+	 		}
+	 		
+	 		localPlayer.targetX = serverPlayer.x;
+	 		localPlayer.targetY = serverPlayer.y;
+	 		localPlayer.r = serverPlayer.r;
+	 	}
+	 	for (i = i; i < data['players'].length; i++) {
+	 		client.game.add('players', data['players'][i]);
+	 	}
+	 	//client.game.things['players'] = data['players'];
+
+	 	if (data['updates'].length > 0) {
+	 		for (var i = 0; i < data['updates'].length; i++) {
+	 			var update = data['updates'][i];
+	 			client.game.add(update[0], update[1]);
+	 		}
+	 	}
+     //client.game.things['players'] = data;
+     // console.log("player positions data" + data);
+     //console.log(window.client.game.things['players']);
+	}
+
 	configureSocket(socket) {
 		var client = this;
 
@@ -18,21 +56,7 @@ class OnlineClient {
 		});
 
 		 socket.on('game.rep.things', function(data) {
-		 	// if (data['bullets']) {
-		 	// 	var bullets = data['bullets'];
-		 	// 	console.log("data.bullets" + bullets[0].x);
-		 	// }
-		 	client.game.things['players'] = data['players'];
-
-		 	if (data['updates'].length > 0) {
-		 		for (var i = 0; i < data['updates'].length; i++) {
-		 			var update = data['updates'][i];
-		 			client.game.add(update[0], update[1]);
-		 		}
-		 	}
-	     //client.game.things['players'] = data;
-	     // console.log("player positions data" + data);
-	     //console.log(window.client.game.things['players']);
+			client.updateFromSocketData(data);
     });
 
 		this.socket = socket;
@@ -45,7 +69,7 @@ class OnlineClient {
 	installTime() {
 		this.now, this.dt, this.last = Date.now();
 		this.dt = 0.00;
-		this.rate = 10;
+		this.rate = 5;
 	}
 
 	styleCanvas(canvas) {
@@ -101,6 +125,11 @@ class OnlineClient {
 
 	parsePlayerInput(left, up, right, down, firing) {		
 		var hash = {'left' : left, 'right' : right, 'down' : down, 'up' : up, 'firing' : firing};
+		// if (left) {
+		// 	this.game.things.players[0].r-= 2;
+		// } else if (right) {
+		// 	this.game.things.players[0].r+= 2;
+		// }
 		if (left || up || right || down || firing) {
 			this.socket.emit('input', hash);	
 			this.zeroInput = false;
@@ -129,25 +158,45 @@ class OnlineClient {
 	}
 
 	loop() {
-		if (this.game.things && this.game.things['bullets']) {
-			for (var i = 0; i < this.game.things['bullets'].length; i++) {
-				var bullet = this.game.things['bullets'][i];
-				applyThrust(bullet);
-				//bullet.x += 4;
-			}
-		}
-
 		this.now = Date.now();
 		var delta  = this.now - this.last;
 		this.last = this.now;
 		this.dt = this.dt + delta;
 		this.localTime += delta;
 
+		// if (this.game.things && this.game.things['players']) {
+		// 		for (var i = 0; i < this.game.things['players'].length; i++) {
+		// 			var player = this.game.things['players'][i];
+		// 			if (player.targetX && player.targetY) {
+		// 				var xDist = player.targetX - player.x;
+	 // 					var yDist = player.targetY - player.y;
+	 // 					player.x += xDist / 5;
+	 // 					player.y += yDist / 5;
+		// 			}
+		// 		}
+		// 	}
+
 		while (this.dt > this.rate) {
-			this.draw();
 			this.dt = this.dt - this.rate;
-			this.loopKeyboardInput(this.key_pressed_map);
+			if (this.game.things && this.game.things['players']) {
+				for (var i = 0; i < this.game.things['players'].length; i++) {
+					var player = this.game.things['players'][i];
+					applyThrust(player);
+				}
+			}
+
+			if (this.game.things && this.game.things['bullets']) {
+				for (var i = 0; i < this.game.things['bullets'].length; i++) {
+					var bullet = this.game.things['bullets'][i];
+					applyThrust(bullet);
+					//bullet.x += 4;
+				}
+			}
 		}
+		this.loopKeyboardInput(this.key_pressed_map);
+		this.draw();
+
+		this.socket.emit('updates', {});
 
 		window.requestAnimationFrame(this.loop.bind(this));
 	}

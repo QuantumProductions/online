@@ -16,7 +16,7 @@ server.listen(3000, function() {
 var now = Date.now();
 var last = now;
 var dt = 0.00;
-var rate = 10;
+var rate = 5;
 
 var originTime = Date.now();
 
@@ -33,12 +33,24 @@ io.on('connection', function(socket) {
   socket.on('input', function(data) {
     game.input(socket, data);
   });
+
+  socket.on('updates', function(data) {
+    var rep = game.representationThings();
+
+    rep = {'players' : rep['players'], 'updates' : updates}; // 'updates' : updates};
+    socket.emit("game.rep.things", rep); 
+
+    //socket.emit('updates', rep);
+    updates = [];
+  })
 });
 
 var loopAsync = function() {
-  setTimeout(loop, 10);
+  setTimeout(loop, 1);
   //setImmediate(loop);
 }
+
+var updates = [];
 
 function loop() {
   now = Date.now();
@@ -53,16 +65,18 @@ function loop() {
     loopAsync();
     return;
   } else {
-    var updates = [];
+    //updates = [];
     while (dt > rate) {
       dt -= rate;
       updates = updates.concat(game.loop());
     }
     
-    var rep = game.representationThings();
-    
-    rep = {'players' : rep['players'], 'updates' : updates}; // 'updates' : updates};
-    io.sockets.emit("game.rep.things", rep);
+    // var rep = game.representationThings();
+
+    // rep = {'players' : rep['players'], 'updates' : updates}; // 'updates' : updates};
+    // io.sockets.emit("game.rep.things", rep); 
+
+
     //io.to specific player
     loopAsync();
   }

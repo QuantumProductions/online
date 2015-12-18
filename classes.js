@@ -204,7 +204,7 @@ class Rocket extends base.Thing { //should thrust rotator be its own component?
 
 class RocketLauncher extends base.Component {
 	defaultMaxCharge() {
-		return [70];
+		return [7];
 	}
 
 	registrationNames() {
@@ -246,7 +246,7 @@ class OnlineComboPilot extends base.Thing {
 	}
 
 	spawnComponents(options) {
-		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 0.05}), new base.MomentumMover()];
+		return [new ShipChassis(), new RocketLauncher(), new Speeder({'speed' : 2}), new base.MomentumMover()];
 	}
 
 	representation() {
